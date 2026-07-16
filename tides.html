@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Harkers Island Tide API Examples</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #0f172a;
+      color: white;
+      padding: 20px;
+    }
+
+    h1 {
+      color: #38bdf8;
+    }
+
+    .card {
+      background: #1e293b;
+      padding: 16px;
+      margin-bottom: 20px;
+      border-radius: 12px;
+    }
+
+    button {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 8px;
+      background: #38bdf8;
+      color: black;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    pre {
+      background: #020617;
+      padding: 12px;
+      overflow-x: auto;
+      border-radius: 8px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Shell Point / Harkers Island Tide APIs</h1>
+
+<div class="card">
+  <h2>1. NOAA (Free, No API Key)</h2>
+  <button onclick="loadNOAA()">Fetch NOAA Tides</button>
+  <pre id="noaa"></pre>
+</div>
+
+<div class="card">
+  <h2>2. WorldTides</h2>
+  <button onclick="loadWorldTides()">Fetch WorldTides</button>
+  <pre id="worldtides"></pre>
+</div>
+
+<div class="card">
+  <h2>3. TidesAtlas</h2>
+  <button onclick="loadTidesAtlas()">Fetch TidesAtlas</button>
+  <pre id="tidesatlas"></pre>
+</div>
+
+<div class="card">
+  <h2>4. Stormglass</h2>
+  <button onclick="loadStormglass()">Fetch Stormglass</button>
+  <pre id="stormglass"></pre>
+</div>
+
+<script>
+  // Harkers Island approximate coordinates
+  const lat = 34.696;
+  const lng = -76.561;
+
+  // NOAA Station:
+  // Beaufort, NC station nearby = 8656483
+
+  async function loadNOAA() {
+    const url =
+      'https://api.tidesandcurrents.noaa.gov/api/prod/datagetter?' +
+      'product=predictions' +
+      '&station=8656483' +
+      '&date=today' +
+      '&datum=MLLW' +
+      '&interval=hilo' +
+      '&units=english' +
+      '&time_zone=lst_ldt' +
+      '&format=json';
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    document.getElementById('noaa').textContent =
+      JSON.stringify(data, null, 2);
+  }
+
+  async function loadWorldTides() {
+    // REPLACE WITH YOUR API KEY
+    const apiKey = 'YOUR_WORLDTIDES_KEY';
+
+    const url =
+      `https://www.worldtides.info/api/v3?` +
+      `heights&extremes&lat=${lat}&lon=${lng}&key=${apiKey}`;
+
+    const res = await fetch(url);
+    const data = await res.json();
+
+    document.getElementById('worldtides').textContent =
+      JSON.stringify(data, null, 2);
+  }
+
+  async function loadTidesAtlas() {
+    // REPLACE WITH YOUR API KEY
+    const apiKey = 'YOUR_TIDESATLAS_KEY';
+
+    const url =
+      `https://api.tidesatlas.com/api/v1/tides?` +
+      `latitude=${lat}&longitude=${lng}&api_key=${apiKey}`;
+
+    try {
+      const res = await fetch(url);
+      const data = await res.json();
+
+      document.getElementById('tidesatlas').textContent =
+        JSON.stringify(data, null, 2);
+    } catch (err) {
+      document.getElementById('tidesatlas').textContent =
+        err.toString();
+    }
+  }
+
+  async function loadStormglass() {
+    // REPLACE WITH YOUR API KEY
+    const apiKey = 'YOUR_STORMGLASS_KEY';
+
+    const start = new Date().toISOString();
+    const end = new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString();
+
+    const url =
+      `https://api.stormglass.io/v2/tide/extremes/point?` +
+      `lat=${lat}&lng=${lng}&start=${start}&end=${end}`;
+
+    try {
+      const res = await fetch(url, {
+        headers: {
+          Authorization: apiKey
+        }
+      });
+
+      const data = await res.json();
+
+      document.getElementById('stormglass').textContent =
+        JSON.stringify(data, null, 2);
+    } catch (err) {
+      document.getElementById('stormglass').textContent =
+        err.toString();
+    }
+  }
+</script>
+
+</body>
+</html>

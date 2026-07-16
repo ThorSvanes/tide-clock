@@ -1,0 +1,4 @@
+time,high low,height,king tide2026-06-15 04:45,Low Tide,-0.271,
+2026-06-15 09:45,High Tide,1.492,
+2026-06-15 16:21,Low Tide,-0.536,
+2026-06-15 22:21,High Tide,2.397,King Tide
