@@ -1,20 +1,20 @@
 import requests
 from datetime import datetime, timedelta
-import gspread
-from google.oauth2.service_account import Credentials
+# import gspread
+# from google.oauth2.service_account import Credentials
 
-scopes = [
-    "https://www.googleapis.com/auth/spreadsheets",
-    "https://www.googleapis.com/auth/drive"
-]
+# scopes = [
+#     "https://www.googleapis.com/auth/spreadsheets",
+#     "https://www.googleapis.com/auth/drive"
+# ]
 
-creds = Credentials.from_service_account_file(
-    "credentials.json",
-    scopes=scopes
-)
+# creds = Credentials.from_service_account_file(
+#     "credentials.json",
+#     scopes=scopes
+# )
 
-client = gspread.authorize(creds)
-sheet = client.open("Tide Data").sheet1
+# client = gspread.authorize(creds)
+# sheet = client.open("Tide Data").sheet1
 
 def getHiloData():
     url = "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
@@ -69,12 +69,12 @@ def getHiloData():
                 f"{prediction['v']},"
                 f"{kingTide}\n"
             )
-            rows.append([
-                prediction["t"],
-                tide_type,
-                height,
-                kingTide
-            ])
+            # rows.append([
+            #     prediction["t"],
+            #     tide_type,
+            #     height,
+            #     kingTide
+            # ])
 
             startTime = hiloData[0]["time"]
             dt = datetime.strptime(prediction["t"], "%Y-%m-%d %H:%M")
@@ -82,6 +82,6 @@ def getHiloData():
             for tide in hiloData:
                 tide["hours"] = (tide["time"] - startTime).total_seconds() / 3600
 
-        sheet.batch_clear(["A1:D15000"])
-        sheet.update(rows, value_input_option="USER_ENTERED")
+        # sheet.batch_clear(["A1:D15000"])
+        # sheet.update(rows, value_input_option="USER_ENTERED")
     return hiloData
